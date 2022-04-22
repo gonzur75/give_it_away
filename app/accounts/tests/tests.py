@@ -1,6 +1,7 @@
 # Create your tests here.
 import pytest
 from django.db import IntegrityError
+from django.urls import reverse_lazy
 
 
 def test_create_user(django_user_model, user):
@@ -29,7 +30,6 @@ def test_user_is_active(user):
 
 
 def test_create_superuser(superuser):
-
     assert superuser.email == "test@test.com"
 
 
@@ -53,3 +53,11 @@ def test_superuser_is_active(superuser):
     assert superuser.is_active is True
 
 
+def test_login_view(client):
+    response = client.get('/accounts/login/')
+    assert response.status_code == 200
+
+
+def test_register_view(client):
+    response = client.get('/accounts/register/')
+    assert response.status_code == 200
