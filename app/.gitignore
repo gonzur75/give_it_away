@@ -1,0 +1,11 @@
+venv
+env/.env
+.dockerignore
+.idea
+*.pyc
+media 
+db.sqlite3
+python/
+mypython/
+media/
+
