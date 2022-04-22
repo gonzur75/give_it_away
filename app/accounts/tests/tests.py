@@ -45,7 +45,7 @@ def test_superuser_is_staff(superuser):
     assert superuser.is_staff is True
 
 
-def test_user_is_superuser(superuser):
+def test_superuser_is_superuser(superuser):
     assert superuser.is_superuser is True
 
 
