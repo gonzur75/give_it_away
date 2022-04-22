@@ -1,4 +1,5 @@
 import pytest
+from django.test import Client
 
 
 @pytest.fixture(scope='function')
@@ -17,3 +18,9 @@ def superuser(django_user_model):
         password='TestPass123'
     )
     yield superuser
+
+
+@pytest.fixture
+def client():
+    client = Client()
+    return client
