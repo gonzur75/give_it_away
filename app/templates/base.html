@@ -11,19 +11,17 @@
     {% endblock %}
 </head>
 
-{% include 'partial/_navbar.html' %}
-
-
 <div class="container mt-5">
     <div class="row">
         <div class="col align-content-stretch">
+            {% block header %}
+            {% endblock %}
             {% block content %}
             {% endblock %}
+            {% include 'partial/_footer.html' %}
         </div>
     </div>
 </div>
-
-{% include 'partial/_footer.html' %}
 
 
 </body>
