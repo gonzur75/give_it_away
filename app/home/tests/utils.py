@@ -3,11 +3,14 @@ import random
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
 
+from home.models import Category
+
+
 
 def fake_institution_data():
     fake_data = {
         'name': 'Test name',
-        'description': faker.paragraph(nb_sentences=2),
+        'description': fake.paragraph(nb_sentences=2),
         'type': get_choice(),
     }
     return fake_data
@@ -25,8 +28,8 @@ def get_choice():
 
 def get_categories():
     for _ in range(3):
-        Category.objects.create(name=faker.name())
+        Category.objects.create(name=fake.name())
     return Category.objects.all()
 
 
-faker = Faker("pl_PL")
+fake = Faker("pl_PL")
