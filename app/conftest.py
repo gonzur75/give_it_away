@@ -1,5 +1,6 @@
 import pytest
 from django.test import Client
+from django.urls import reverse_lazy
 
 
 @pytest.fixture(scope='function')
@@ -24,3 +25,7 @@ def superuser(django_user_model):
 def client():
     client = Client()
     return client
+
+@pytest.fixture(scope='function')
+def landing_page_get_response(client):
+    return client.get(reverse_lazy('home:landing_page'))
