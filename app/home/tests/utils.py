@@ -10,7 +10,7 @@ from home.models import Category, Institution
 
 def fake_institution_data():
     fake_data = {
-        'name': 'Test name',
+        'name': fake.name(),
         'description': fake.paragraph(nb_sentences=2),
         'type': get_choice(),
     }
@@ -28,9 +28,8 @@ def get_choice():
 
 
 def get_categories():
-    for _ in range(3):
-        Category.objects.create(name=fake.name())
-    return Category.objects.all()
+    categories = Category.objects.all()
+    return random.choice(categories)
 
 
 fake = Faker("pl_PL")
