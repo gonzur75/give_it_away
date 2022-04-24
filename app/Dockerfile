@@ -14,7 +14,7 @@ COPY requirements.txt ./
 
 RUN python -m pip install --no-cache-dir --upgrade pip
 RUN pip install -r requirements.txt
-
+RUN pip install pip install django-phonenumber-field[phonenumberslite]
 
 COPY . .
 
