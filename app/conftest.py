@@ -26,7 +26,7 @@ def custom_user():
 
 @pytest.fixture(scope='function')
 def superuser(django_user_model):
-    superuser = django_user_model.objects.create_super_user(
+    superuser = django_user_model.objects.create_superuser(
         email="test@test.com",
         password='TestPass123'
     )

@@ -35,7 +35,7 @@ def test_create_superuser(superuser):
 
 def test_superuser_email_is_unique(django_user_model, superuser):
     with pytest.raises(IntegrityError):
-        django_user_model.objects.create_super_user(
+        django_user_model.objects.create_superuser(
             email="test@test.com",
             password='TestPass123'
         )
