@@ -11,8 +11,8 @@ class LandingPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        number_of_bags = sum([bag for bag in Donation.objects.values('quantity')])
-        number_of_institution = sum(set([institution for institution in Donation.objects.values('institution')]))
+        number_of_bags = sum([bag[0] for bag in Donation.objects.values_list('quantity')])
+        number_of_institution = len(set([institution for institution in Donation.objects.values_list('institution')]))
         context.update({
             'number_of_organisation': number_of_institution,
             'number_of_bags': number_of_bags

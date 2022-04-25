@@ -29,8 +29,9 @@ def get_choice():
 
 def get_categories():
     categories = Category.objects.all()
-    return random.choice(categories)
-
+    categories = random.sample(list(categories), 2)
+    categories = [a.id for a in categories]
+    return categories
 
 fake = Faker("pl_PL")
 
@@ -38,18 +39,21 @@ fake = Faker("pl_PL")
 def fake_donation_data(user):
     fake_data = {
         'quantity': random.randint(1, 10),
-        'institution': get_institution(),
+        'institution': get_institution_from_database(),
         'address': fake.street_address(),
         'phone_number': fake.phone_number(),
         'city': fake.city(),
         'zip_code': fake.postcode(),
         'pick_up_date': fake.date(),
         'pick_up_time': fake.time(),
-        'pick_up_comment': fake.paragraphs(nb=2),
+        'pick_up_comment': fake.paragraphs(nb=1),
         'user': user
     }
     return fake_data
 
-
+def get_institution_from_database():
+    institution = Institution.objects.all()
+    return random.choice(institution
+                         )
 def get_institution():
     return Institution.objects.create(**fake_institution_data())

@@ -17,11 +17,11 @@ def user(django_user_model):
 
 @pytest.fixture(scope='function')
 def custom_user():
-    return  get_user_model().objects.create_user(
+    custom_user = get_user_model().objects.create_user(
         email="test@test.com",
         password='TestPass123'
     )
-
+    return custom_user
 
 
 @pytest.fixture(scope='function')
@@ -45,12 +45,12 @@ def landing_page_get_response(client):
 
 
 @pytest.fixture
-def set_up():
+def set_up(custom_user):
     for _ in range(5):
         Category.objects.create(name=fake.name())
     for _ in range(2):
         institution = Institution.objects.create(**fake_institution_data())
         institution.categories.add(Category.objects.create(name='test'))
     for _ in range(10):
-        donation_object = Donation.objects.create(**fake_donation_data(user))
-        donation_object.categories.add(get_categories())
+        donation_object = Donation.objects.create(**fake_donation_data(custom_user))
+        donation_object.categories.set(get_categories())

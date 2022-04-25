@@ -6,7 +6,7 @@ from app.home.tests.utils import fake_institution_data, get_categories, fake_don
 
 
 @pytest.mark.django_db
-def test_category_model_object_create():
+def test_category_model_object_create(set_up):
     test_category = Category.objects.create(
         name='Test name'
     )
@@ -14,14 +14,14 @@ def test_category_model_object_create():
 
 
 @pytest.mark.django_db
-def test_institution_model_object_create():
+def test_institution_model_object_create(set_up):
     test_institution = Institution.objects.create(**fake_institution_data())
     test_institution.categories.set(get_categories())
     assert Institution.objects.last() == test_institution
 
 
 @pytest.mark.django_db
-def test_institution_model_type_default():
+def test_institution_model_type_default(set_up):
     fake_data_without_type = fake_institution_data()
     fake_data_without_type.pop('type')
     test_institution = Institution.objects.create(**fake_data_without_type)
@@ -32,9 +32,5 @@ def test_institution_model_type_default():
 
 
 @pytest.mark.django_db
-def test_donation_model_object_creation(user):
-    test_donation_object = Donation.objects.create(**fake_donation_data(user))
-    # Direct assignment to the forward side of a many-to-many set is
-    # prohibited. Use categories.set() instead.
-    test_donation_object.categories.set(get_categories())
-    assert Donation.objects.last() == test_donation_object
+def test_donation_model_object_creation(set_up):
+    assert Donation.objects.count() == 10
