@@ -46,11 +46,19 @@ def landing_page_get_response(client):
 
 @pytest.fixture
 def set_up(custom_user):
+
     for _ in range(5):
         Category.objects.create(name=fake.name())
-    for _ in range(2):
-        institution = Institution.objects.create(**fake_institution_data())
+
+    for x in range(3):
+
+        choices = ['FU', 'OP', 'ZL']
+        data = fake_institution_data()
+        data['type'] = choices[x]
+        institution = Institution.objects.create(**data)
         institution.categories.add(Category.objects.create(name='test'))
+
     for _ in range(10):
+
         donation_object = Donation.objects.create(**fake_donation_data(custom_user))
         donation_object.categories.set(get_categories())

@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.shortcuts import render
 
 # Create your views here.
@@ -10,13 +11,17 @@ class LandingPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        number_of_bags = sum([bag[0] for bag in Donation.objects.values_list('quantity')])
-        number_of_institution = len(set([institution for institution in Donation.objects.values_list('institution')]))
-        list_of_foundations = list(Institution.objects.filter(type='FU'))
+        number_of_bags = Donation.objects.aggregate(Sum('quantity'))['quantity__sum']
+        number_of_institution = Donation.objects.distinct('institution').count()
+        list_of_foundations = Institution.objects.filter(type='FU')
+        list_of_organizations = Institution.objects.filter(type='OP')
+        list_of_collections = Institution.objects.filter(type='ZL')
         context.update({
             'number_of_organisation': number_of_institution,
             'number_of_bags': number_of_bags,
             'list_of_foundations': list_of_foundations,
+            'list_of_organizations': list_of_organizations,
+            'list_of_collections': list_of_collections
         })
         return context
 
