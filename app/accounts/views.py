@@ -14,4 +14,4 @@ class RegisterView(CreateView):
     template_name = 'accounts/register.html'
     model = User
     form_class = DonorCreationForm
-    success_url = reverse_lazy('home:landing_page')
+    success_url = reverse_lazy('login')

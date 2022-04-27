@@ -1,4 +1,6 @@
 # Create your tests here.
+from pprint import pprint
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
@@ -63,16 +65,27 @@ def test_login_view(client):
 
 def test_register_view(client):
     response = client.get('/accounts/register/')
-    assert response.status_code == 200
+    print(response.context)
+    assert response.status_code == 302
 
 
-@pytest.mark.django_db
-def test_register_user(client):
+def register_user_response(client):
     response = client.post('/accounts/register/', {
         'email': TEST_EMAIL,
         'password1': TEST_PASSWORD,
         'password2': TEST_PASSWORD,
     })
+    return response
+
+
+@pytest.mark.django_db
+def test_register_user(client):
+    response = register_user_response(client)
     assert response.status_code == 302
     user = get_user_model()
     assert user.objects.count() == 1
+
+@pytest.mark.django_db
+def test_register_user(client):
+    response = register_user_response(client)
+    assert '/accounts/login/' == response.url
