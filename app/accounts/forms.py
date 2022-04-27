@@ -10,13 +10,6 @@ class DonorCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
-        labels = {
-            'first_name': _('Imię'),
-            'last_name': _('Nazwisko'),
-            'email': _('Email'),
-            'password1': _('Hasło'),
-            'password2': _('Powtórz hasło')
-        }
         widgets = {
             'first_name':  forms.TextInput(attrs={'placeholder': _('Imię')}),
             'last_name': forms.TextInput(attrs={'placeholder': _('Nazwisko')}),
