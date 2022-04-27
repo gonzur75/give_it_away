@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.shortcuts import render
 
 # Create your views here.
@@ -11,7 +12,8 @@ class LandingPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        number_of_bags = Donation.objects.aggregate(Sum('quantity'))['quantity__sum']
+        # czy
+        number_of_bags = Donation.objects.aggregate(quantity=Coalesce(Sum('quantity'), 0))['quantity']
         number_of_institution = Donation.objects.distinct('institution').count()
         list_of_foundations = Institution.objects.filter(type='FU')
         list_of_organizations = Institution.objects.filter(type='OP')
