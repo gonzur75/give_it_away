@@ -6,6 +6,10 @@ from django.urls import reverse_lazy
 from home.models import Institution, Donation, Category
 from home.tests.utils import fake_institution_data, fake, get_categories, fake_donation_data
 
+TEST_USERNAME = "TestUser"
+TEST_EMAIL = "test@test.com"
+TEST_PASSWORD = 'TestPass123'
+
 
 @pytest.fixture(scope='function')
 def user(django_user_model):

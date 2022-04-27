@@ -46,3 +46,4 @@ def test_context_list_of_organizations_for_landing_page(set_up, landing_page_get
 def test_context_list_of_collections_for_landing_page(set_up, landing_page_get_response):
     collection = Institution.objects.filter(type='ZL').first()
     assert collection in landing_page_get_response.context['list_of_collections']
+

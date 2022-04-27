@@ -1,7 +1,10 @@
 # Create your tests here.
 import pytest
+from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.urls import reverse_lazy
+
+from conftest import TEST_EMAIL, TEST_PASSWORD
 
 
 def test_create_user(django_user_model, user):
@@ -61,3 +64,15 @@ def test_login_view(client):
 def test_register_view(client):
     response = client.get('/accounts/register/')
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_register_user(client):
+    response = client.post('/accounts/register/', {
+        'email': TEST_EMAIL,
+        'password1': TEST_PASSWORD,
+        'password2': TEST_PASSWORD,
+    })
+    assert response.status_code == 302
+    user = get_user_model()
+    assert user.objects.count() == 1
