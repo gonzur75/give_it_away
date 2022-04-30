@@ -2,28 +2,39 @@
 {% block title %}Login{% endblock %}
 
 {% block header %}
-<header>
-{% include 'partial/_navbar.html' %}
-  </header>
+    <header>
+        {% include 'partial/_navbar.html' %}
+    </header>
 {% endblock %}
 
 {% block content %}
     <section class="login-page">
-      <h2>Zaloguj się</h2>
-      <form method="post">
+        <h2>Zaloguj się</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.labels }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        {{ field.help_text }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                    {% comment %}<input type="email" name="email" placeholder="Email" />{% endcomment %}
+                </div>
+            {% endfor %}
 
-        <div class="form-group">
-          <input type="email" name="email" placeholder="Email" />
-        </div>
-        <div class="form-group">
-          <input type="password" name="password" placeholder="Hasło" />
-          <a href="{% url 'password_reset' %}" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
-        </div>
+            <div class="form-group">
+                <a href="{% url 'password_reset' %}" class="btn btn--small btn--without-border reset-password">Przypomnij
+                    hasło</a>
+            </div>
 
-        <div class="form-group form-group--buttons">
-          <a href="{% url  'register' %}" class="btn btn--without-border">Załóż konto</a>
-          <button  class="btn" type="submit">Zaloguj się</button>
-        </div>
-      </form>
+            <div class="form-group form-group--buttons">
+                <a href="{% url  'register' %}" class="btn btn--without-border">Załóż konto</a>
+                <button class="btn" type="submit">Zaloguj się</button>
+            </div>
+        </form>
     </section>
 {% endblock %}

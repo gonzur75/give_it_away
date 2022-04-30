@@ -70,14 +70,20 @@ def test_user_loging_in(user, client):
         'password': TEST_PASSWORD,
     })
     assert get_user_model().objects.last().is_authenticated
-    print(get_user_model().objects.last().email)
-    assert response.status_code == 300
+    assert response.status_code == 200
+
+
+def test_not_existing_user_redirect_to_registration(client):
+    response = client.post('/accounts/login/', {
+        'email': TEST_EMAIL,
+        'password': TEST_PASSWORD,
+    })
+    assert '/accounts/register/' in response.content.decode('utf-8')
 
 
 def test_register_view(client):
     response = client.get('/accounts/register/')
-    print(response.context)
-    assert response.status_code == 302
+    assert response.status_code == 200
 
 
 def register_user_response(client):
