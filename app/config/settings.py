@@ -145,3 +145,4 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home:landing_page'
 LOGOUT_REDIRECT_URL = 'home:landing_page'
+LOGIN_URL = 'login'
