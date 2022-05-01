@@ -1,18 +1,15 @@
+import pprint
+
 import pytest
 from django.db.models import Count, Sum
 from django.urls import reverse_lazy
 
-from home.models import Donation, Institution
+from home.models import Donation, Institution, Category
 
 
 @pytest.mark.django_db
 def test_landing_page_view(landing_page_get_response):
     assert landing_page_get_response.status_code == 200
-
-
-def test_add_donation_view(client):
-    response = client.get(reverse_lazy('home:add_donation'))
-    assert response.status_code == 200
 
 
 @pytest.mark.django_db
@@ -47,3 +44,17 @@ def test_context_list_of_collections_for_landing_page(set_up, landing_page_get_r
     collection = Institution.objects.filter(type='ZL').first()
     assert collection in landing_page_get_response.context['list_of_collections']
 
+
+def test_add_donation_view(client):
+    response = client.get(reverse_lazy('home:add_donation'))
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_add_donation_view_displaying_categories(user_logged_in, set_up, client):
+    category_name = Category.objects.first().name
+    response = client.get(reverse_lazy('home:add_donation'), follow=True)
+    pp = pprint.PrettyPrinter(width=155, compact=True)
+    pp.pprint(response.content.decode('utf-8'))
+
+    assert category_name in response.content.decode('Utf-8')

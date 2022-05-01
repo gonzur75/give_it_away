@@ -70,7 +70,7 @@ def test_login_view(client):
 def test_landing_page_view_has_user_menu(user, client):
     client.login(username=TEST_EMAIL, password=TEST_PASSWORD)
     response = client.get('/')
-    check_text = f'Witaj { TEST_EMAIL }'
+    check_text = f'Witaj {TEST_EMAIL}'
     assert check_text in response.content.decode('utf-8')
 
 
@@ -97,6 +97,7 @@ def test_register_view(client):
     assert response.status_code == 200
 
 
+@pytest.mark.django_db
 def register_user_response(client):
     response = client.post('/accounts/register/', {
         'email': TEST_EMAIL,

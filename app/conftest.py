@@ -19,12 +19,16 @@ def user(django_user_model):
     )
     yield user
 
+
 @pytest.fixture(scope='function')
 def custom_user():
-    custom_user = get_user_model().objects.create_user(
+    custom_user, created = get_user_model().objects.get_or_create(
         email="test@test.com",
-        password='TestPass123'
     )
+    if created:
+        custom_user.set_password(TEST_PASSWORD)
+        custom_user.save()
+
     return custom_user
 
 
@@ -48,14 +52,17 @@ def landing_page_get_response(client):
     return client.get(reverse_lazy('home:landing_page'))
 
 
+@pytest.fixture(scope='function')
+def user_logged_in(user, client):
+    client.login(email=TEST_EMAIL, password=TEST_PASSWORD)
+
+
 @pytest.fixture
 def set_up(custom_user):
-
     for _ in range(5):
         Category.objects.create(name=fake.name())
 
     for x in range(3):
-
         choices = ['FU', 'OP', 'ZL']
         data = fake_institution_data()
         data['type'] = choices[x]
@@ -63,6 +70,5 @@ def set_up(custom_user):
         institution.categories.add(Category.objects.create(name='test'))
 
     for _ in range(10):
-
         donation_object = Donation.objects.create(**fake_donation_data(custom_user))
         donation_object.categories.set(get_categories())
