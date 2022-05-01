@@ -1,5 +1,5 @@
 # Create your tests here.
-from pprint import pprint
+import pprint
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -8,6 +8,9 @@ from django.urls import reverse_lazy
 
 from conftest import TEST_EMAIL, TEST_PASSWORD
 
+
+# pp = pprint.PrettyPrinter(width=155, compact=True)
+#     pp.pprint(response.content.decode('utf-8'))
 
 def test_create_user(django_user_model, user):
     check_user = django_user_model.objects.last()
@@ -64,20 +67,28 @@ def test_login_view(client):
 
 
 @pytest.mark.django_db
+def test_landing_page_view_has_user_menu(user, client):
+    client.login(username=TEST_EMAIL, password=TEST_PASSWORD)
+    response = client.get('/')
+    check_text = f'Witaj { TEST_EMAIL }'
+    assert check_text in response.content.decode('utf-8')
+
+
+@pytest.mark.django_db
 def test_user_loging_in(user, client):
     response = client.post('/accounts/login/', {
         'email': TEST_EMAIL,
         'password': TEST_PASSWORD,
     })
     assert get_user_model().objects.last().is_authenticated
-    assert response.status_code == 200
 
 
-def test_not_existing_user_redirect_to_registration(client):
+@pytest.mark.django_db
+def test_none_existing_user_redirect_to_registration(client):
     response = client.post('/accounts/login/', {
         'email': TEST_EMAIL,
         'password': TEST_PASSWORD,
-    })
+    }, follow=True)
     assert '/accounts/register/' in response.content.decode('utf-8')
 
 
