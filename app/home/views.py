@@ -39,8 +39,9 @@ class AddDonationView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = Category.objects.all()
+        institutions = Institution.objects.all()
         context.update({
             'categories': categories,
-
+            'institutions': institutions,
         })
         return context
