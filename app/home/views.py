@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django import forms
+from django.forms import ModelForm
 from django.shortcuts import render
 
 # Create your views here.
@@ -28,13 +30,21 @@ class LandingPageView(TemplateView):
         return context
 
 
+class AddDonationForm(ModelForm):
+    class Meta:
+        model = Donation
+        exclude = ['user', 'institution']
+        widgets = {
+            'pick_up_date': forms.DateInput(attrs={'type': 'date'}),
+            'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
+            'pick_up_comment': forms.Textarea(attrs={'rows': 5}),
+            'phone_number': forms.TextInput(attrs={'type': 'phone'}),
+        }
+
 class AddDonationView(LoginRequiredMixin, CreateView):
     template_name = 'home/add-donation_form.html'
     model = Donation
-    fields = [
-        'quantity', 'categories', 'institution', 'address', 'phone_number',
-        'city', 'zip_code', 'pick_up_date', 'pick_up_time', 'pick_up_comment'
-    ]
+    form_class = AddDonationForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
