@@ -3,7 +3,8 @@ from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django import forms
 from django.forms import ModelForm
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.views.generic import TemplateView, ListView, CreateView
@@ -41,10 +42,9 @@ class AddDonationForm(ModelForm):
             'phone_number': forms.TextInput(attrs={'type': 'phone'}),
         }
 
-class AddDonationView(LoginRequiredMixin, CreateView):
+
+class AddDonationView(LoginRequiredMixin, TemplateView):
     template_name = 'home/add-donation_form.html'
-    model = Donation
-    form_class = AddDonationForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,3 +55,26 @@ class AddDonationView(LoginRequiredMixin, CreateView):
             'institutions': institutions,
         })
         return context
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        institution = Institution.objects.get(name=data['organization'])
+        donation = Donation.objects.create(
+            quantity=data['bags'],
+            institution=institution,
+            address=data['address'],
+            phone_number=data['phone'],
+            city=data['city'],
+            zip_code=data['postcode'],
+            pick_up_date=data['data'],
+            pick_up_time=data['time'],
+            pick_up_comment=data['more_info'],
+            user=request.user
+        )
+        donation.categories.set(data['categories'])
+        response = redirect('home:form_confirmation')
+        return response
+
+
+class FormConfirmationView(LoginRequiredMixin, TemplateView):
+    template_name = 'home/form-confirmation.html'

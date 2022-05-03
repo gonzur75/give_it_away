@@ -221,6 +221,12 @@ document.addEventListener("DOMContentLoaded", function () {
          * Update form front-end
          * Show next or previous section etc.
          */
+
+        formValues() {
+            const donationForm = document.querySelector('form')
+            return new FormData(donationForm)
+        }
+
         updateForm() {
             this.$step.innerText = this.currentStep;
 
@@ -251,53 +257,40 @@ document.addEventListener("DOMContentLoaded", function () {
                             institution.style.display = "none";
                         }
                     }
+                } else {
+                    institution.style.display = "block";
                 }
-                else{
-                            institution.style.display = "block";
-                    }
-                })
+            })
 
             if (this.currentStep === 5) {
-                const getQuantityValue = document.querySelector('input[name="bags"]').value
-                const getInstitutionValue = document.querySelector('input[name="organization"]:checked').value
-                const getAddressValue = document.querySelector('input[name="address"]').value
-                const getCityValue = document.querySelector('input[name="city"]').value
-                const getPostcodeValue = document.querySelector('input[name="postcode"]').value
-                const getPhoneValue = document.querySelector('input[name="phone"]').value
-                const getDataValue = document.querySelector('input[name="data"]').value
-                const getTimeValue = document.querySelector('input[name="time"]').value
-                const getMoreInfoValue = document.querySelector('textarea[name="more_info"]').value
 
+                const value = this.formValues()
                 const Summary = document.querySelector('div.summary')
 
                 const SummaryTextSpans = Summary.firstElementChild.querySelectorAll('span.summary--text')
-                SummaryTextSpans[0].innerHTML = getQuantityValue + ' worki'
-                SummaryTextSpans[1].innerHTML = 'Dla ' + getInstitutionValue
+                SummaryTextSpans[0].innerHTML = value.get('bags') + ' worki'
+                SummaryTextSpans[1].innerHTML = 'Dla ' + value.get('organization')
 
                 const SummaryColumns = Summary.lastElementChild
 
                 const SummaryAddress = SummaryColumns.firstElementChild.querySelectorAll("li")
-                SummaryAddress[0].innerText = getAddressValue
-                SummaryAddress[1].innerText = getCityValue
-                SummaryAddress[2].innerText = getPostcodeValue
-                SummaryAddress[3].innerText = getPhoneValue
+                SummaryAddress[0].innerText = value.get('address')
+                SummaryAddress[1].innerText = value.get('city')
+                SummaryAddress[2].innerText = value.get('postcode')
+                SummaryAddress[3].innerText = value.get('phone')
 
                 const SummaryTime = SummaryColumns.lastElementChild.querySelectorAll('li')
-                SummaryTime[0].innerText = getDataValue
-                SummaryTime[1].innerText = getTimeValue
-                SummaryTime[2].innerText = getMoreInfoValue
+                SummaryTime[0].innerText = value.get('data')
+                SummaryTime[1].innerText = value.get('time')
+                SummaryTime[2].innerText = value.get('more_info')
 
-
-
-                console.log(SummaryAddress[0])
 
             }
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-
-
             // TODO: get data from inputs and show them in summary
+
         }
 
         /**
@@ -305,11 +298,20 @@ document.addEventListener("DOMContentLoaded", function () {
          *
          * TODO: validation, send data to server
          */
+
         submit(e) {
             e.preventDefault();
             this.currentStep++;
-            this.updateForm();
-            // dopisć fetch z postem przesłać dane z FormData
+            let data = this.formValues()
+            fetch('/add_donation/', {
+                method: 'post',
+                body: data,
+            }).then(response => {
+                console.log(response)
+                if (response.redirected) {
+                    window.location.href = response.url
+                }
+            })
         }
     }
 
