@@ -23,8 +23,6 @@ class DonorLoginView(LoginView):
     form_class = DonorAuthenticationForm
     template_name = 'registration/login.html'
 
-
-
     def form_invalid(self, form):
         """If the form is invalid, check if user is in database if True render the invalid form,
             else redirect to register."""
@@ -34,4 +32,3 @@ class DonorLoginView(LoginView):
             return redirect('register')
         else:
             return self.render_to_response(self.get_context_data(form=form))
-
