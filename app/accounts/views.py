@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from accounts.forms import DonorCreationForm, DonorAuthenticationForm
 
@@ -32,3 +32,8 @@ class DonorLoginView(LoginView):
             return redirect('register')
         else:
             return self.render_to_response(self.get_context_data(form=form))
+
+
+class DonorDetailView(DetailView):
+    model = get_user_model()
+    template_name = 'accounts/user_detail.html'

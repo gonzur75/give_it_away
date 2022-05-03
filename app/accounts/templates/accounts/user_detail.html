@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block header %}
+    <header>
+        {% include 'partial/_navbar.html' %}
+    </header>
+{% endblock %}
+{% block content %}
+     <section id="about-us" class="about-us">
+        <div class="about-us--text">
+            <h2>Hello,
+                {% if user.first_name %}
+             {{ user.first_name|title }} {{ user.last_name|title }} {% else %} User{% endif %} </h2>
+            <p>Email:{{ user.email }} </p>
+
+        </div>
+        <div class="about-us--image"><img src='{% static "images/about-us.jpg" %}' alt="People in circle"/></div>
+    </section>
+{% endblock %}

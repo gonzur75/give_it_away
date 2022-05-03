@@ -16,6 +16,8 @@ class Category(models.Model):
 
 
 class Institution(models.Model):
+    class Meta:
+        ordering = ['-name']
     FOUNDATION = 'FU'
     ORGANISATION = 'OP'
     COLLECTION = 'ZL'
