@@ -1,9 +1,12 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView
@@ -45,3 +48,17 @@ class DonorDetailView(LoginRequiredMixin, DetailView):
         user_donations = Donation.objects.filter(user=self.request.user)
         context.update({'user_donations': user_donations})
         return context
+
+    def post(self, request, pk):
+        data_unicode = request.body.decode('utf-8')
+        data = json.loads(data_unicode)
+        try:
+            donation = Donation.objects.get(id=data['donation_id'])
+        except Donation.DoesNotExist:
+            raise Http404('Donation does not exist')
+        donation.is_taken = True
+        donation.save()
+        return HttpResponse(status=201)
+
+
+

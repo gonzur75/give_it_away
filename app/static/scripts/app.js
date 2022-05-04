@@ -315,8 +315,49 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
     const form = document.querySelector(".form--steps");
     if (form !== null) {
         new FormSteps(form);
     }
+    const takenButton = document.querySelectorAll('#is_taken')
+
+    const csrftoken = getCookie('csrftoken');
+
+    takenButton.forEach(button => {
+        const userId = button.dataset.id
+       button.addEventListener('click', function (e) {
+
+        fetch('/accounts/user_detail/' + userId, {
+            headers: {'X-CSRFToken': csrftoken},
+            method: 'post',
+            body: JSON.stringify({"donation_id": button.value}),
+        }).then(response => {
+            console.log(response)
+            if (response.status === 201) {
+                button.setAttribute('disabled', true)
+                button.innerHTML = 'Przekazany'
+                button.parentElement.parentElement
+            }
+        })
+
+    })
+    })
+
 });
