@@ -31,16 +31,6 @@ class LandingPageView(TemplateView):
         return context
 
 
-class AddDonationForm(ModelForm):
-    class Meta:
-        model = Donation
-        exclude = ['user', 'institution']
-        widgets = {
-            'pick_up_date': forms.DateInput(attrs={'type': 'date'}),
-            'pick_up_time': forms.TimeInput(attrs={'type': 'time'}),
-            'pick_up_comment': forms.Textarea(attrs={'rows': 5}),
-            'phone_number': forms.TextInput(attrs={'type': 'phone'}),
-        }
 
 
 class AddDonationView(LoginRequiredMixin, TemplateView):

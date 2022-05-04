@@ -7,14 +7,49 @@
     </header>
 {% endblock %}
 {% block content %}
-     <section id="about-us" class="about-us">
+    <section id="about-us" class="about-us">
         <div class="about-us--text">
             <h2>Hello,
                 {% if user.first_name %}
-             {{ user.first_name|title }} {{ user.last_name|title }} {% else %} User{% endif %} </h2>
+                    {{ user.first_name|title }} {{ user.last_name|title }} {% else %} User{% endif %} </h2>
             <p>Email:{{ user.email }} </p>
+            <ul class="help--slides-items ">
+                <li>
+                    <div class="col">
+                        <div class="title">Licba worków</div>
+                    </div>
+                    <div class="col">
+                        <div class="title">Instytucja</div>
+                    </div>
+                    <div class="col">
+                        <div class="title">Kategorie</div>
+                    </div>
+                    <div class="col">
+                        <div class="title">Termin odbioru</div>
+                    </div>
+                </li>
+                {% for donation in user_donations %}
 
+
+                    <li>
+                        <div class="col">
+                            <div class="title">{{ donation.quantity }}</div>
+                        </div>
+                        <div class="col">
+                            <div class="title">{{ donation.institution }}</div>
+                        </div>
+                        <div class="col">
+                            <div class="title">
+                                {% for category in donation.categories.all %}{{ category.name }}{% endfor %}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="title">{{ donation.pick_up_date }} {{ donation.pick_up_time }} </div>
+                        </div>
+                    </li>
+                {% empty %} <h2>Nie przekazałeś jescze żadnych darów </h2>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="about-us--image"><img src='{% static "images/about-us.jpg" %}' alt="People in circle"/></div>
     </section>
 {% endblock %}
